@@ -1,0 +1,35 @@
+version: '3'
+
+services: 
+  app:
+    build: .
+    depends_on:
+      - catalog_db
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - DB_HOST=catalog_db
+      - DB_PORT=5432
+      - UPDATE_INTERVAL=1h
+      - LOGLEVEL=debug    
+    ports:
+      - 8080:8080
+    command: go run cmd/main.go
+
+  catalog_db:
+    image: postgres:alpine
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5434:5432"
+
+  catalog_db_migrate:
+    image: migrate/migrate
+    depends_on:
+      - catalog_db
+    volumes:
+      - ./internal/adapter/db/migration:/migrations
+    command: ["-path", "/migrations/", "-database", "postgres://catalog_db:catalog_db@catalog_db:5432/catalog_db?sslmode=disable", "up"]
