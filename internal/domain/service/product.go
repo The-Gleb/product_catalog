@@ -57,7 +57,7 @@ func (s *productService) Delete(ctx context.Context, ID int64) error {
 	return s.storage.Delete(ctx, ID)
 }
 
-func (s *productService) CheckNewProducts(ctx context.Context) error { // TODO: handle errors
+func (s *productService) CheckNewProducts(ctx context.Context) error {
 
 	ticker := time.NewTicker(s.updateInterval)
 	offset := 10

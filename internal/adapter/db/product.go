@@ -371,7 +371,7 @@ func (ps *productStorage) UpdateName(ctx context.Context, product entity.UpdateP
 		return errors.NewDomainError(errors.ErrDB, "")
 	}
 	if c.RowsAffected() == 0 {
-		slog.Error("no rows affected, product id not found") // TODO: or name is the same as it was
+		slog.Error("no rows affected, product id not found")
 
 		return errors.NewDomainError(errors.ErrNoDataFound, "")
 	}
